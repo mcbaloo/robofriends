@@ -8,7 +8,6 @@ const Card = (props) =>{
     <div>
         <h2>{name}</h2>
         <p>Nickname: {username}</p>
-        <p>Occupation: {occupation}</p>
         <p>Email: {email}</p>
     </div>
 </div>

@@ -1,13 +1,23 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import CardList from './CardList';
-import {robot} from './robot';
 import Search from './Search';
+import {setSearchfield} from './Action'
+const mapStateToProps = state =>{
+  return {
+    searchfield : state.searchfield
+  }
+}
+const mapDispatchToProps = (dispatch)=>{
+  return {
+    onSearchChange:(event)=>dispatch(setSearchfield(event.target.value))
+  }
+  }
 class App extends Component{
   constructor(){
     super()
     this.state= {
-      robots: [],
-      searchfield : ''
+      robots: []
     }
   }
   componentDidMount(){
@@ -16,24 +26,21 @@ class App extends Component{
     .then(users=>this.setState({robots: users}));
     
   }
-  onSearchChange= (event)=>{
- this.setState({searchfield:event.target.value})
-  }
   render(){
+    const {robots} = this.state;
+    const {searchfield, onSearchChange} = this.props
     const filteredRobots = this.state.robots.filter(robots=>{
-      const text = this.state.searchfield.toLowerCase();
+      const text = searchfield.toLowerCase();
       return robots.name.toLowerCase().includes(text) || 
-      robots.username.toLowerCase().includes(text)||
-      robots.occupation.toLowerCase().includes(text)||
-      robots.email.toLowerCase().includes(text);
+      robots.username.toLowerCase().includes(text);    
     })
   return(
     <div className="tc">
       <h1>Robo Friends</h1>
-    <Search searchChange={this.onSearchChange}/>
+    <Search searchChange={onSearchChange}/>
   <CardList robot={filteredRobots}/>
 </div>
   ); 
 }
 }
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
